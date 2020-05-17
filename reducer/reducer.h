@@ -13,16 +13,17 @@
 #include <pthread.h>
 #include <fcntl.h>
 #include <iostream>
-#include "mapreduce.h"
+#include "../mapreduce/mapreduce.h"
 
 #include <grpcpp/grpcpp.h>
-#include "reducer.grpc.pb.h"
+#include "../reducer.grpc.pb.h"
 
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
 using grpc::Status;
 
+using reducer::Reducer;
 using reducer::ReducerInitRequest;
 using reducer::ReducerInitReply;
 using reducer::ReducerStartRequest;
@@ -61,7 +62,6 @@ class ReducerServiceImplementation final : public Reducer::Service {
 
     private:
         int32_t reducer_start_(struct map_reduce *mr, int id);
-        int32_t check_mapper_status(struct map_reduce *mr);
         int32_t receiver(struct map_reduce *mr, std::string buffer, int size, int id);
         reducer_struct* reducer_init(struct map_reduce *mr, int id);
         void reducer_destroy(struct reducer_struct *reduce_worker);

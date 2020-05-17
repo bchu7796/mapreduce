@@ -60,7 +60,7 @@ static std::vector<std::string> read_tokens(mapper_struct* map_worker) {
     return a;
 }
 
-void* map_wrapper(void* map_worker) {
+static void* map_wrapper(void* map_worker) {
     // turn the argument to mapper_struct type
     mapper_struct *map_exec = (mapper_struct*) map_worker;
     printf("mapper(%d) start map_wrapper\n", map_exec->id);

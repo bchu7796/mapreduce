@@ -1,4 +1,5 @@
 /* Header includes */
+#include "reducer.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,6 +21,7 @@ using grpc::ServerBuilder;
 using grpc::ServerContext;
 using grpc::Status;
 
+using reducer::Reducer;
 using reducer::ReducerInitRequest;
 using reducer::ReducerInitReply;
 using reducer::ReducerStartRequest;
@@ -29,13 +31,16 @@ using reducer::ReducerFlushReply;
 
 #define REDUCE_BUFFER_SIZE 1024000
 
-struct reducer_struct {
-    int id;
-    struct map_reduce *mr;
-    int barrier;
-    char* outpath;
-    int (*reduce_fnc)(struct map_reduce*, struct kvpair*, size_t num);
-};
+static int32_t check_mapper_status(struct map_reduce *mr) {
+    for(int i = 0; i < mr->n_threads; i++) {
+        if(mr->mapfn_status[i] != 0){
+            printf("check_mapper_status() return 0\n");
+            return 0;
+        } 
+    }
+    printf("check_mapper_status() return 1\n");
+    return 1;
+}
 
 static void* reduce_wrapper(void* reduce_worker) {
     printf("reducer start map_wrapper\n");
@@ -57,17 +62,6 @@ static void* reduce_wrapper(void* reduce_worker) {
     reduce_exec->mr->reducefn_status = 0;
     printf("reducer finish map_wrapper\n");
     return NULL;
-}
-
-int32_t ReducerServiceImplementation::check_mapper_status(struct map_reduce *mr) {
-    for(int i = 0; i < mr->n_threads; i++) {
-        if(mr->mapfn_status[i] != 0){
-            printf("check_mapper_status() return 0\n");
-            return 0;
-        } 
-    }
-    printf("check_mapper_status() return 1\n");
-    return 1;
 }
 
 reducer_struct* ReducerServiceImplementation::reducer_init(struct map_reduce *mr, int id) {
@@ -166,7 +160,7 @@ Status ReducerServiceImplementation::reducer_init(
     ServerContext* context, 
     const ReducerInitRequest* request, 
     ReducerInitReply* reply
-) override {
+) {
     printf("rpc call to reduce_init\n");
     char *app = (char*) request->application().c_str();
     int n_threads = request->threads();
@@ -187,7 +181,7 @@ Status ReducerServiceImplementation::reducer_start(
     ServerContext* context, 
     const ReducerStartRequest* request, 
     ReducerStartReply* reply
-) override {
+) {
     printf("call to reducer rpc\n");
     char *app = (char*) request->application().c_str();
     int n_threads = request->threads();
@@ -211,7 +205,7 @@ Status ReducerServiceImplementation::flush(
     ServerContext* context, 
     const ReducerFlushRequest* request, 
     ReducerFlushReply* reply
-) override {
+) {
     int finished = receiver(mr, request->buffer(), request->size(), request->id());
     
     reply->set_successful(finished);

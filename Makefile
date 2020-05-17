@@ -29,16 +29,16 @@ all: ./build/wordc_client ./build/wordc_mapper ./build/wordc_reducer ./build/gre
 ./build/wordc_mapper: mapper.pb.o mapper.grpc.pb.o reducer.pb.o reducer.grpc.pb.o $(MAPPER_OBJ) $(MAPREDUCE_OBJ) bin/mr_wordc.o $(GRPC_OBJ) $(TOOLS_OBJ) driver.o
 	$(CXX) $^ $(LDFLAGS) -o $@
 
-./build/wordc_reducer: mapper.pb.o mapper.grpc.pb.o reducer.pb.o reducer.grpc.pb.o $(REDUCER_OBJ) $(MAPREDUCE_OBJ) bin/mr_wordc.o $(TOOLS_OBJ)
+./build/wordc_reducer: mapper.pb.o mapper.grpc.pb.o reducer.pb.o reducer.grpc.pb.o $(REDUCER_OBJ) $(MAPREDUCE_OBJ) bin/mr_wordc.o $(GRPC_OBJ) $(TOOLS_OBJ) driver.o
 	$(CXX) $^ $(LDFLAGS) -o $@
 
-./build/grep_client: mapper.pb.o mapper.grpc.pb.o reducer.pb.o reducer.grpc.pb.o bin/driver.o bin/mr_grep.o $(MAPREDUCE_OBJ) $(GRPC_OBJ) $(TOOLS_OBJ)
+./build/grep_client: mapper.pb.o mapper.grpc.pb.o reducer.pb.o reducer.grpc.pb.o bin/driver.o bin/mr_grep.o $(MAPREDUCE_OBJ) $(GRPC_OBJ) $(TOOLS_OBJ) test.o
 	$(CXX) $^ $(LDFLAGS) -o $@
 
-./build/grep_mapper: mapper.pb.o mapper.grpc.pb.o reducer.pb.o reducer.grpc.pb.o $(MAPPER_OBJ) $(MAPREDUCE_OBJ) bin/mr_grep.o $(GRPC_OBJ) $(TOOLS_OBJ)
+./build/grep_mapper: mapper.pb.o mapper.grpc.pb.o reducer.pb.o reducer.grpc.pb.o $(MAPPER_OBJ) $(MAPREDUCE_OBJ) bin/mr_grep.o $(GRPC_OBJ) $(TOOLS_OBJ) driver.o
 	$(CXX) $^ $(LDFLAGS) -o $@
 
-./build/grep_reducer: mapper.pb.o mapper.grpc.pb.o reducer.pb.o reducer.grpc.pb.o $(REDUCER_OBJ) $(MAPREDUCE_OBJ) bin/mr_grep.o $(TOOLS_OBJ)
+./build/grep_reducer: mapper.pb.o mapper.grpc.pb.o reducer.pb.o reducer.grpc.pb.o $(REDUCER_OBJ) $(MAPREDUCE_OBJ) bin/mr_grep.o $(TOOLS_OBJ) $(GRPC_OBJ) driver.o
 	$(CXX) $^ $(LDFLAGS) -o $@
 
 
