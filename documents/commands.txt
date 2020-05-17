@@ -1,0 +1,11 @@
+./wordc_client "wordc" 4 "./test/mr_wordc/Testcase1/test1.txt" "output1.txt" " .,:;" 0 
+
+./wordc_client "wordc" 4 "./test/mr_wordc/Testcase2/test2.txt" "output2.txt " " .,:;-?!" 1
+
+./wordc_client "wordc" 4 "./test/mr_wordc/Testcase3/test3.txt" "output3.txt" " .,:;-?!()[]" 0
+
+./grep_client "grep" 4 "./test/mr_grep/Testcase1/test1.txt" "output1.txt" "ill-will" 1
+
+./grep_client "grep" 4 "./test/mr_grep/Testcase2/test2.txt" "output2.txt" "lord" 0
+
+./grep_client "grep" 4 "./test/mr_grep/Testcase3/test3.txt" "output3.txt" "upon" 0

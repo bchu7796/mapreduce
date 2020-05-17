@@ -1,0 +1,2 @@
+Argument List:
+"grep" <numThreads> "test2.txt" "output2.txt" "lord" 1

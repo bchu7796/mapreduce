@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+option java_package = "ex.grpc";
+
+package reducer;
+
+// Defines the service
+service Reducer {
+    // Function invoked to send the request
+    rpc reducer_init (ReducerInitRequest) returns (ReducerInitReply) {}
+    rpc reducer_start (ReducerStartRequest) returns (ReducerStartReply) {}
+    rpc flush (ReducerFlushRequest) returns (ReducerFlushReply) {}
+}
+
+// The request message containing requested numbers
+message ReducerInitRequest {
+    string application = 1;
+    int32 threads = 2;
+    string inpath = 3;
+    string outpath = 4;
+    string args = 5;
+    int32 barrier = 6;
+    int32 id = 7;
+}
+
+message ReducerInitReply {
+    int32 result = 1;
+}
+
+message ReducerStartRequest {
+    string application = 1;
+    int32 threads = 2;
+    string inpath = 3;
+    string outpath = 4;
+    string args = 5;
+    int32 barrier = 6;
+    int32 id = 7;
+}
+
+// The response message containing response
+message ReducerStartReply {
+    int32 id = 1;
+    int32 result = 2;
+}
+
+// BUFFER
+message ReducerFlushRequest {
+    int32 id = 1;
+    bytes buffer = 2;
+    int32 size = 3;
+}
+
+// Return
+message ReducerFlushReply {
+    int32 successful = 1;
+}
